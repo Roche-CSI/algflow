@@ -1,0 +1,27 @@
+[project]
+name = "algflow"
+version = "0.0.1"
+description = "Algorithms driven pipeline"
+authors = [
+    {name = "Seraj Ahmad", email="seraj@algflow.org" }
+]
+dynamic = ["dependencies", "optional-dependencies"]
+requires-python = ">= 3.11"
+readme = "README.md"
+keywords = ["algflow", "plugin", "data handler", "storage backend"]
+license = {text = "MIT License"}
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+optional-dependencies.development = { file = ["requirements-dev.txt"] }
+
+[project.urls]
+Homepage = "https://algflow.org"
+Documentation = "https://readthedocs.org/algflow"
+Repository = "https://github.com/RSC-CSI/algflow"
+Issues = "https://github.com/RSC-CSI/algflow/issues"
+Changelog = "https://github.com/RSC-CSI/algflow/blob/master/CHANGELOG.md"
+
+
+[project.scripts]
+algflow = "algflow.cmd.main:app"

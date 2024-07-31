@@ -1,0 +1,7 @@
+SmmothingAverage:
+    window: 10
+    method: shift
+    description: about the eram
+
+CacheAlgorithm:
+    most_recent: true
