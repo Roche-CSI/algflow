@@ -89,6 +89,10 @@ class AlgFlowDataHandler(ABC):
     def set(self, name, value: Any):
         pass
 
+    @abstractmethod
+    def push(self, name, value: Any):
+        pass
+
 
 class DataHandlerNotFound(Exception):
     def __init__(self, path: str):

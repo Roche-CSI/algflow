@@ -1,8 +1,9 @@
 import logging
-from typing import Any
+import inspect
+from typing import Any, Generator
 
 from algflow.algorithm.alg_meta import AlgorithmMetaClass
-from algflow.algorithm.output import Output
+from algflow.algorithm.events import AlgflowEvent
 
 logger = logging.getLogger('Algorithm')
 
@@ -15,10 +16,12 @@ class AlgorithmError(Exception):
 
 
 class Algorithm(metaclass=AlgorithmMetaClass):
-    def __init__(self, params=None):
+    def __init__(self, params=None, capture_events=True):
         self.params = params
+        self.capture_events = capture_events
+        self.events = []
 
-    def run(self, inputs, outputs):
+    def run(self, inputs, outputs) -> Generator[AlgflowEvent] | None:
         raise NotImplementedError('This method must be implemented')
 
     # def init_input(self, storage):
@@ -47,6 +50,12 @@ class Algorithm(metaclass=AlgorithmMetaClass):
     def __call__(self, inputs: dict[str, Any]) -> dict[str, Any]:
         inputs = self.Input(**inputs)
         outputs = self.Output()
-        self.run(inputs, outputs)
+        if inspect.isgeneratorfunction(self.run):
+            if self.capture_events:
+                self.events = [ev for ev in self.run(inputs, outputs)]
+            else:
+                yield from self.run(inputs, outputs)
+        else:
+            self.run(inputs, outputs)
         outputs.validate()
         return outputs.__dict__
